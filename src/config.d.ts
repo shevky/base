@@ -93,6 +93,7 @@ export type ShevkyConfig = {
   build: BuildConfig;
   identity: IdentityConfig;
   robots: RobotsConfig;
+  ui: Record<string, unknown>;
   pluginConfigs: Record<string, unknown>;
   plugins: string[];
 };

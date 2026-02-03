@@ -108,6 +108,7 @@ import io from "./io.js";
  * @property {BuildConfig} build Build pipeline flags.
  * @property {IdentityConfig} identity Identity metadata.
  * @property {RobotsConfig} robots Robots.txt directives.
+ * @property {Record<string, unknown>} ui UI configuration bag.
  * @property {Record<string, unknown>} pluginConfigs Plugin config bag.
  * @property {string[]} plugins Plugin package list.
  */
@@ -197,6 +198,7 @@ const FALLBACKS = {
     allow: ["/"],
     disallow: [],
   },
+  ui: {},
   pluginConfigs: {},
   plugins: [],
 };
@@ -265,6 +267,9 @@ const API = {
   },
   get robots() {
     return resolveConfig("robots");
+  },
+  get ui() {
+    return resolveConfig("ui");
   },
   get pluginConfigs() {
     return resolveConfig("pluginConfigs");

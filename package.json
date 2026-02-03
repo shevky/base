@@ -1,6 +1,6 @@
 {
   "name": "@shevky/base",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Shared base utilities and types for Shevky core and plugins.",
   "license": "MIT",
   "repository": {
