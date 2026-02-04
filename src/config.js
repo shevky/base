@@ -57,7 +57,7 @@ import io from "./io.js";
  * @typedef {Object} ContentConfig
  * @property {PaginationConfig} pagination Pagination defaults.
  * @property {{default: string, supported: string[], canonical: Record<string, string>}} languages Supported locales and canonical base paths per locale.
- * @property {Record<string, unknown>} collections Custom collection definitions.
+ * @property {Record<string, unknown> & { includeContentFile?: boolean }} collections Custom collection definitions.
  */
 
 /**
@@ -167,7 +167,9 @@ const FALLBACKS = {
         en: "/en/",
       },
     },
-    collections: {},
+    collections: {
+      includeContentFile: false,
+    },
   },
   build: {
     minify: false,

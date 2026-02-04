@@ -47,7 +47,7 @@ export type PaginationConfig = {
 export type ContentConfig = {
   pagination: PaginationConfig;
   languages: { default: string; supported: string[]; canonical: Record<string, string> };
-  collections: Record<string, unknown>;
+  collections: Record<string, unknown> & { includeContentFile?: boolean };
 };
 
 export type BuildConfig = {
