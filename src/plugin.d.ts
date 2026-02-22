@@ -35,6 +35,7 @@ export type ContentHeaderLike = {
   canonical?: string;
   title?: string;
   template?: string;
+  schemaType?: string;
   featured?: boolean;
   category?: string;
   tags?: string[];
@@ -72,6 +73,7 @@ export type ContentFileLike = {
   canonical?: string;
   title?: string;
   template?: string;
+  schemaType?: string;
   isFeatured?: boolean;
   category?: string;
   tags?: string[];
@@ -131,6 +133,7 @@ export enum PluginHook {
   ASSETS_COPY = "assets:copy",
   CONTENT_LOAD = "content:load",
   CONTENT_READY = "content:ready",
+  PAGE_META = "page:meta",
 }
 
 export type PluginHooks = Partial<Record<PluginHook, HookHandler>> & {
@@ -151,12 +154,46 @@ export type PluginHooksMap = Readonly<{
   ASSETS_COPY: "assets:copy";
   CONTENT_LOAD: "content:load";
   CONTENT_READY: "content:ready";
+  PAGE_META: "page:meta";
+}>;
+
+export type SchemaType =
+  | "post"
+  | "page"
+  | "home"
+  | "contact"
+  | "about"
+  | "collection"
+  | "policy";
+
+export type PluginSchemaMap = Readonly<{
+  POST: "post";
+  PAGE: "page";
+  HOME: "home";
+  CONTACT: "contact";
+  ABOUT: "about";
+  COLLECTION: "collection";
+  POLICY: "policy";
+}>;
+
+export type CollectionType = "tag" | "category" | "series";
+
+export type PluginCollectionMap = Readonly<{
+  TAG: "tag";
+  CATEGORY: "category";
+  SERIES: "series";
 }>;
 
 export function createBaseContext(): BasePluginContext;
 
 export type PluginApi = {
   hooks: PluginHooksMap;
+  schema: PluginSchemaMap;
+  schemaTypes: readonly SchemaType[];
+  isSchemaType: (value: unknown) => value is SchemaType;
+  collection: PluginCollectionMap;
+  collectionTypes: readonly CollectionType[];
+  isCollectionType: (value: unknown) => value is CollectionType;
   createBaseContext: typeof createBaseContext;
 };
 

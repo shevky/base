@@ -7,7 +7,39 @@ const HOOKS = Object.freeze({
   ASSETS_COPY: "assets:copy",
   CONTENT_LOAD: "content:load",
   CONTENT_READY: "content:ready",
+  PAGE_META: "page:meta",
 });
+const SCHEMA = Object.freeze({
+  POST: "post",
+  PAGE: "page",
+  HOME: "home",
+  CONTACT: "contact",
+  ABOUT: "about",
+  COLLECTION: "collection",
+  POLICY: "policy",
+});
+const SCHEMA_TYPES = Object.freeze(Object.values(SCHEMA));
+const COLLECTION = Object.freeze({
+  TAG: "tag",
+  CATEGORY: "category",
+  SERIES: "series",
+});
+const COLLECTION_TYPES = Object.freeze(Object.values(COLLECTION));
+
+/** @param {unknown} value */
+function isSchemaType(value) {
+  return (
+    typeof value === "string" && SCHEMA_TYPES.includes(value.trim().toLowerCase())
+  );
+}
+
+/** @param {unknown} value */
+function isCollectionType(value) {
+  return (
+    typeof value === "string" &&
+    COLLECTION_TYPES.includes(value.trim().toLowerCase())
+  );
+}
 
 function createBaseContext() {
   return {
@@ -33,6 +65,12 @@ function createBaseContext() {
 
 const API = {
   hooks: HOOKS,
+  schema: SCHEMA,
+  schemaTypes: SCHEMA_TYPES,
+  isSchemaType,
+  collection: COLLECTION,
+  collectionTypes: COLLECTION_TYPES,
+  isCollectionType,
   createBaseContext,
 };
 

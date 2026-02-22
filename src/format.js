@@ -127,6 +127,181 @@ function resolveUrl(value, baseUrl = "") {
   return ensureDirectoryTrailingSlash(normalized);
 }
 
+/** @param {string} value */
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** @param {unknown} value */
+function isObject(value) {
+  return Boolean(value) && typeof value === "object";
+}
+
+/** @param {unknown} value */
+function isString(value) {
+  return typeof value === "string";
+}
+
+/** @param {unknown} value */
+function isRecord(value) {
+  return isObject(value) && !Array.isArray(value);
+}
+
+/** @param {unknown} value */
+function isFunction(value) {
+  return typeof value === "function";
+}
+
+/** @param {unknown} value */
+function isBoolean(value) {
+  return typeof value === "boolean";
+}
+
+/** @param {unknown} value @param {Record<string, any> | null} [fallback] */
+function toRecord(value, fallback = null) {
+  return isRecord(value) ? value : fallback;
+}
+
+/** @param {unknown[]} values */
+function pickFirstRecord(...values) {
+  for (const value of values) {
+    if (isRecord(value)) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+/** @param {unknown} value */
+function hasText(value) {
+  return isString(value) && value.trim().length > 0;
+}
+
+/** @param {unknown} value @param {unknown} [fallback] */
+function text(value, fallback = "") {
+  if (hasText(value)) {
+    return value.trim();
+  }
+
+  return hasText(fallback) ? fallback.trim() : "";
+}
+
+/** @param {unknown} value */
+function toLocaleArray(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (isString(value) && value.trim().length > 0) {
+    return value.split(",").map((item) => item.trim());
+  }
+
+  return [];
+}
+
+/** @param {unknown} value */
+function normalizeStringArray(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((item) => text(item)).filter(hasText);
+}
+
+/** @param {unknown} value */
+function uniqueStringArray(value) {
+  return [...new Set(normalizeStringArray(value))];
+}
+
+/** @param {unknown} value */
+function toPositiveInteger(value) {
+  const numberValue = Number(value);
+  if (!Number.isFinite(numberValue)) {
+    return null;
+  }
+
+  const rounded = Math.round(numberValue);
+  return rounded > 0 ? rounded : null;
+}
+
+/** @param {unknown} value */
+function toDurationIso(value) {
+  const minutes = Number(value);
+  if (!Number.isFinite(minutes) || minutes <= 0) {
+    return "";
+  }
+
+  const rounded = Math.max(1, Math.round(minutes));
+  return `PT${rounded}M`;
+}
+
+/** @param {unknown} input */
+function serializeForInlineScript(input) {
+  return JSON.stringify(input ?? {})
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+}
+
+/** @param {unknown[]} values */
+function pickFirstText(...values) {
+  for (const value of values) {
+    if (hasText(value)) {
+      return value.trim();
+    }
+  }
+
+  return "";
+}
+
+/** @param {string | null | undefined} lang */
+function resolveLocaleTag(lang) {
+  return String(i18n.culture(lang) ?? lang ?? "en").replace("_", "-");
+}
+
+/** @param {unknown} value */
+function humanizeSlugLikeText(value, lang) {
+  const trimmed = typeof value === "string" ? value.trim() : "";
+  if (!trimmed) {
+    return "";
+  }
+
+  const locale = resolveLocaleTag(lang);
+  return trimmed
+    .split(/[-_]+/g)
+    .filter(hasText)
+    .map((word) => word.charAt(0).toLocaleUpperCase(locale) + word.slice(1))
+    .join(" ");
+}
+
+/** @param {unknown} value */
+function normalizeLabel(value, lang) {
+  const trimmed = typeof value === "string" ? value.trim() : "";
+  if (!trimmed) {
+    return "";
+  }
+
+  const isSlugLike = /^[a-z0-9]+(?:[-_][a-z0-9]+)*$/.test(trimmed);
+  return isSlugLike ? humanizeSlugLikeText(trimmed, lang) : trimmed;
+}
+
+/** @param {unknown} value */
+function buildLookupKeyVariants(value) {
+  const trimmed = typeof value === "string" ? value.trim() : "";
+  if (!trimmed) {
+    return [];
+  }
+
+  const normalized = trimmed.toLowerCase();
+  const hyphenated = normalized.replace(/\s+/g, "-");
+  const underscored = hyphenated.replace(/-/g, "_");
+
+  return [...new Set([trimmed, normalized, hyphenated, underscored])];
+}
+
 // ========== API Definition ========== //
 const API = {
   escape: function (value) {
@@ -189,19 +364,29 @@ const API = {
 
     return Math.round(num);
   },
-
-  normalizeStringArray: function (value) {
-    if (!Array.isArray(value)) {
-      return [];
-    }
-
-    return value
-      .map((tag) => (typeof tag === "string" ? tag.trim() : ""))
-      .filter((tag) => tag.length > 0);
-  },
+  normalizeStringArray,
+  uniqueStringArray,
+  toPositiveInteger,
+  toDurationIso,
   slugify,
   ensureDirectoryTrailingSlash,
   resolveUrl,
+  escapeRegExp,
+  isObject,
+  isString,
+  isRecord,
+  isFunction,
+  isBoolean,
+  toRecord,
+  pickFirstRecord,
+  hasText,
+  text,
+  toLocaleArray,
+  serializeForInlineScript,
+  pickFirstText,
+  humanizeSlugLikeText,
+  normalizeLabel,
+  buildLookupKeyVariants,
   boolean: function (value) {
     if (typeof value === "boolean") {
       return value;
