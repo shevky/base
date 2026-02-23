@@ -61,9 +61,18 @@ import io from "./io.js";
  */
 
 /**
+ * @typedef {Object} BuildOutputAlias
+ * @property {string} from Source output URL/path (example: "~/404/" or "/en/404/").
+ * @property {string} to Target output URL/path (example: "~/404.html" or "/en/404.html").
+ */
+
+/**
  * @typedef {Object} BuildConfig
  * @property {boolean} minify Minifies generated bundles.
  * @property {boolean} debug Emits debug logs/outputs.
+ * @property {number} [pageBufferLimit] Number of pages kept in memory before flushing to disk.
+ * @property {BuildOutputAlias[]} [outputAliases] Additional output path aliases copied after build.
+ * @property {string[]} [contentRootDirectories] Content subdirectories copied to dist root as-is (example: ".well-known").
  */
 
 /**
@@ -174,6 +183,9 @@ const FALLBACKS = {
   build: {
     minify: false,
     debug: false,
+    pageBufferLimit: 20,
+    outputAliases: [],
+    contentRootDirectories: [".well-known"],
   },
   identity: {
     author: "<name> <surname>",

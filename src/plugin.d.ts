@@ -159,19 +159,31 @@ export type PluginHooksMap = Readonly<{
 
 export type SchemaType =
   | "post"
+  | "job-post"
+  | "job-listing"
+  | "not-found"
   | "page"
   | "home"
   | "contact"
   | "about"
+  | "press"
+  | "help"
+  | "faq"
   | "collection"
   | "policy";
 
 export type PluginSchemaMap = Readonly<{
   POST: "post";
+  JOB_POST: "job-post";
+  JOB_LISTING: "job-listing";
+  NOT_FOUND: "not-found";
   PAGE: "page";
   HOME: "home";
   CONTACT: "contact";
   ABOUT: "about";
+  PRESS: "press";
+  HELP: "help";
+  FAQ: "faq";
   COLLECTION: "collection";
   POLICY: "policy";
 }>;

@@ -53,6 +53,9 @@ export type ContentConfig = {
 export type BuildConfig = {
   minify: boolean;
   debug: boolean;
+  pageBufferLimit?: number;
+  outputAliases?: Array<{ from: string; to: string }>;
+  contentRootDirectories?: string[];
 };
 
 export type SocialIdentityConfig = {

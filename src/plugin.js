@@ -11,10 +11,16 @@ const HOOKS = Object.freeze({
 });
 const SCHEMA = Object.freeze({
   POST: "post",
+  JOB_POST: "job-post",
+  JOB_LISTING: "job-listing",
+  NOT_FOUND: "not-found",
   PAGE: "page",
   HOME: "home",
   CONTACT: "contact",
   ABOUT: "about",
+  PRESS: "press",
+  HELP: "help",
+  FAQ: "faq",
   COLLECTION: "collection",
   POLICY: "policy",
 });
